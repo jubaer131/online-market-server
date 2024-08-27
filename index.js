@@ -65,7 +65,7 @@ async function run() {
     }
   
     if (sortOrder === 'price-asc') {
-      sort = { price: 1 }; // Low to High
+     
     } else if (sortOrder === 'price-desc') {
       sort = { price: -1 }; // High to Low
     } else if (sortOrder === 'date-desc') {

@@ -69,7 +69,7 @@ async function run() {
     } else if (sortOrder === 'price-desc') {
       sort = { price: -1 }; // High to Low
     } else if (sortOrder === 'date-desc') {
-     
+      sort = { dateAdded: -1 }; // Newest first
     }
   
     try {

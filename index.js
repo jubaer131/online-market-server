@@ -30,25 +30,55 @@ async function run() {
   
 
 
+  // app.get('/products', async (req, res) => {
+  //   const search = req.query.search;
+  //   const sortOrder = req.query.sortOrder === 'desc' ? -1 : 1; 
+  //   let query = {};
+  
+  //   if (search) {
+  //     query = {
+  //       productName: { $regex: search, $options: 'i' } // 'i' for case-insensitive search
+  //     };
+  //   }
+  
+  //   try {
+  //     const result = await allonlinecollection.find(query).sort({ productName: sortOrder }).toArray(); // Apply the query here
+  //     res.send(result);
+  //   } catch (error) {
+  //     console.error('Error fetching products:', error);
+  //     res.status(500).send('Internal Server Error');
+  //   }
+  // });
+
   app.get('/products', async (req, res) => {
     const search = req.query.search;
-    const sortOrder = req.query.sortOrder === 'desc' ? -1 : 1; 
+    const sortOrder = req.query.sortOrder;
     let query = {};
+    let sort = {};
   
     if (search) {
       query = {
-        productName: { $regex: search, $options: 'i' } // 'i' for case-insensitive search
+        productName: { $regex: search, $options: 'i' } // Case-insensitive search
       };
     }
   
+    if (sortOrder === 'price-asc') {
+      sort = { price: 1 }; // Low to High
+    } else if (sortOrder === 'price-desc') {
+      sort = { price: -1 }; // High to Low
+    } else if (sortOrder === 'date-desc') {
+      sort = { dateAdded: -1 }; // Newest first
+    }
+  
     try {
-      const result = await allonlinecollection.find(query).sort({ productName: sortOrder }).toArray(); // Apply the query here
+      const result = await allonlinecollection.find(query).sort(sort).toArray();
       res.send(result);
     } catch (error) {
       console.error('Error fetching products:', error);
       res.status(500).send('Internal Server Error');
     }
   });
+  
   
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });

@@ -53,6 +53,8 @@ async function run() {
   app.get('/products', async (req, res) => {
     const search = req.query.search;
     const sortOrder = req.query.sortOrder;
+    const size = parseInt(req.query.size) || 10; 
+    const page = parseInt(req.query.page) - 1; 
     let query = {};
     let sort = {};
   
@@ -71,7 +73,7 @@ async function run() {
     }
   
     try {
-      const result = await allonlinecollection.find(query).sort(sort).toArray();
+      const result = await allonlinecollection.find(query).skip(page*size ).limit(size).sort(sort).toArray();
       res.send(result);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -79,7 +81,10 @@ async function run() {
     }
   });
   
-  
+  app.get('/paginationcount', async(req,res)=>{
+    const count = await allonlinecollection.countDocuments();
+    res.send({count})
+  })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");

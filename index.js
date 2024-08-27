@@ -83,7 +83,7 @@ async function run() {
   
   app.get('/paginationcount', async(req,res)=>{
     const count = await allonlinecollection.countDocuments();
-   
+    res.send({count})
   })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });

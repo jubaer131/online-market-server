@@ -27,14 +27,29 @@ async function run() {
     // await client.connect();
     const allonlinecollection = client.db("online-market").collection("specialProducts");
 
-   
+  
 
 
-    app.get('/products', async (req, res) => {
-        const cursor = allonlinecollection.find();
-        const result = await cursor.toArray();
-        res.send(result);
-      })
+  app.get('/products', async (req, res) => {
+    const search = req.query.search;
+    const sortOrder = req.query.sortOrder === 'desc' ? -1 : 1; 
+    let query = {};
+  
+    if (search) {
+      query = {
+        productName: { $regex: search, $options: 'i' } // 'i' for case-insensitive search
+      };
+    }
+  
+    try {
+      const result = await allonlinecollection.find(query).sort({ productName: sortOrder }).toArray(); // Apply the query here
+      res.send(result);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+  
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");

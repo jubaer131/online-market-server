@@ -26,20 +26,15 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
     const allonlinecollection = client.db("online-market").collection("specialProducts");
+    const SpecialfoodCollections = client.db("online-market").collection("foodCollections");
+
+    
+    app.get('/fruits', async(req,res)=>{
+      const result = await SpecialfoodCollections.find().toArray()
+      res.send(result)
+    })
 
   
-
-
-  // app.get('/products', async (req, res) => {
-  //   const search = req.query.search;
-  //   const sortOrder = req.query.sortOrder === 'desc' ? -1 : 1; 
-  //   let query = {};
-  
-  //   if (search) {
-  //     query = {
-  //       productName: { $regex: search, $options: 'i' } // 'i' for case-insensitive search
-  //     };
-  //   }
   
   //   try {
   //     const result = await allonlinecollection.find(query).sort({ productName: sortOrder }).toArray(); // Apply the query here
